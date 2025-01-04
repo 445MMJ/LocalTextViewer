@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, Settings, Logs, FolderOpen, CircleArrowRight } from 'lucide-react'
+import { FileText, Settings, Logs, FolderOpen, CircleArrowRight, FileJson  } from 'lucide-react'
 
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false)
@@ -277,6 +277,10 @@ export default function TextViewer() {
             <Button  variant="outline" size="icon" onClick={handleNextFileClick}>
             <CircleArrowRight className="h-4 w-4" />
             </Button>
+            <a href="https://github.com/445MMJ/LocalTextViewer">
+            <Button variant="outline" size="icon">
+            <FileJson   className="h-4 w-4" />
+            </Button></a>
           </div>
           <div className="py-4">
 
