@@ -56,6 +56,8 @@ export default function TextViewer() {
           }
         }
         setFiles(fileList);
+        const fileHandle = await get('file');
+        await handleFileClick(fileHandle);
       }
     } catch (error) {
       console.error("Error reading directory:", error);
@@ -82,6 +84,7 @@ export default function TextViewer() {
   const handleFileClick = async (fileHandle: FileSystemFileHandle) => {
     try {
       const file = await fileHandle.getFile();
+      await set('file', fileHandle);
       const reader = new FileReader();
       reader.onload = (e) => {
         const fileContent = e.target?.result as string;
