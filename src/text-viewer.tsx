@@ -1,5 +1,5 @@
 'use client'
-
+import { get, set } from 'https://unpkg.com/idb-keyval@5.0.2/dist/esm/index.js';
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
@@ -13,7 +13,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, Settings, Logs, FolderOpen, CircleArrowRight, FileJson  } from 'lucide-react'
+import { FileText, Settings, Logs, FolderOpen, CircleArrowRight, FileJson, History } from 'lucide-react'
 
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false)
@@ -28,12 +28,47 @@ export default function TextViewer() {
   const [currentFileName, setCurrentFileName] = useState("");
   const [encoding, setEncoding] = useState("UTF-8"); // 文字コードの状態を追加
   const [parser, setParser] = useState("なろう"); // パーサーの選択状態を追加
+  
+  const verifyPermission = async (fileHandle: FileSystemDirectoryHandle) => {
+    // Check if permission was already granted. If so, return true.
+    if ((await fileHandle.queryPermission()) === 'granted') {
+      return true;
+    }
+    // Request permission. If the user grants permission, return true.
+    if ((await fileHandle.requestPermission()) === 'granted') {
+      return true;
+    }
+    // The user didn't grant permission, so return false.
+    return false;
+  }
+
+  const handleDirectoryFromStore = async () => {
+    try {
+      const directoryHandleOrUndefined = await get('directory');
+      if (directoryHandleOrUndefined) {
+        console.log(`Retrieved directroy handle "${directoryHandleOrUndefined.name}" from IndexedDB.`) 
+        await verifyPermission(directoryHandleOrUndefined);
+        const fileList: { name: string; handle: FileSystemFileHandle }[] = [];
+        for await (const [name, handle] of directoryHandleOrUndefined) {
+          console.log(`Stored directory handle "${directoryHandleOrUndefined.name}" from IndexedDB.`) 
+          if (handle.kind === "file") {
+            fileList.push({ name, handle });
+          }
+        }
+        setFiles(fileList);
+      }
+    } catch (error) {
+      console.error("Error reading directory:", error);
+    }
+  }
 
   const handleDirectoryChange = async () => {
     try {
       const directoryHandle = await window.showDirectoryPicker();
+      await set('directory', directoryHandle);
       const fileList: { name: string; handle: FileSystemFileHandle }[] = [];
       for await (const [name, handle] of directoryHandle) {
+        console.log(`Stored directory handle "${directoryHandle.name}" from IndexedDB.`) 
         if (handle.kind === "file") {
           fileList.push({ name, handle });
         }
@@ -273,6 +308,9 @@ export default function TextViewer() {
           <div className="flex space-x-2">
             <Button variant="outline" size="icon" onClick={handleDirectoryChange}>
             <FolderOpen className="h-4 w-4" />
+            </Button>
+            <Button variant="outline" size="icon" onClick={handleDirectoryFromStore}>
+            <History  className="h-4 w-4" />
             </Button>
             <Button  variant="outline" size="icon" onClick={handleNextFileClick}>
             <CircleArrowRight className="h-4 w-4" />
