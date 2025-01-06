@@ -1,5 +1,5 @@
 'use client'
-import { get, set } from 'https://unpkg.com/idb-keyval@5.0.2/dist/esm/index.js';
+import { get, set } from 'idb-keyval';
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Slider } from "@/components/ui/slider"
