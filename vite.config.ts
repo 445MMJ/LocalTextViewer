@@ -12,20 +12,21 @@ export default defineConfig({
     devOptions: {
       enabled: true
     },
-    includeAssets: ['assets/favicon.ico'],
+    includeAssets: ['favicon.svg'],
     manifest: {
       name: 'Local Text Viewer',
       short_name: 'Txt View',
       description: 'View text files on your browser',
-      theme_color: '#ffffff',
+      theme_color: '#000000',
+      background_color: '#000000',
       icons: [
         {
-          src: 'assets/icon-192x192.png',
+          src: 'pwa-192x192.png',
           sizes: '192x192',
           type: 'image/png'
         },
         {
-          src: 'assets/icon-512x512.png',
+          src: 'pwa-512x512.png',
           sizes: '512x512',
           type: 'image/png'
         }
