@@ -5,8 +5,12 @@ import { Button } from "@/components/ui/button"
 import { Settings, Logs} from 'lucide-react'
 import Header from "./header.tsx"
 import SettingsDialog from "./SettingsDialog.tsx"
-import Sidebar from "./Sidebar.tsx"
-
+import Sidebar from "./AppSidebar.tsx"
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar"
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -180,8 +184,20 @@ export default function TextViewer() {
   };
   
   return (
+    <SidebarProvider><SidebarInset>
+    <Sidebar
+      isSidebarOpen={isSidebarOpen}
+      setIsSidebarOpen={setIsSidebarOpen}
+      colorTheme={colorTheme}
+      files={files}
+      handleDirectoryChange={handleDirectoryChange}
+      handleDirectoryFromStore={handleDirectoryFromStore}
+      handleNextFileClick={handleNextFileClick}
+      handleFileClick={handleFileClick}
+    />
     <div className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}>
       <Header>
+      <SidebarTrigger className="-ml-1" />
           <Button variant="outline" size="icon" onClick={() => setOverlayOpen(true)}>
             <Settings className="h-4 w-4" />
             <span className="sr-only">設定</span>
@@ -217,17 +233,7 @@ export default function TextViewer() {
         setParser={setParser}
       />
 
-      <Sidebar
-        isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
-        colorTheme={colorTheme}
-        files={files}
-        handleDirectoryChange={handleDirectoryChange}
-        handleDirectoryFromStore={handleDirectoryFromStore}
-        handleNextFileClick={handleNextFileClick}
-        handleFileClick={handleFileClick}
-      />
-    </div>
+    </div>  </SidebarInset></SidebarProvider>
   )
 }
 

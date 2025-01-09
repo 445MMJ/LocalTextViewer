@@ -1,7 +1,17 @@
 import React from 'react';
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
 import { Button } from '@/components/ui/button';
 import { FolderOpen, History, CircleArrowRight, FileJson } from 'lucide-react';
+
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarRail,
+} from "@/components/ui/sidebar"
 
 interface SidebarProps {
   isSidebarOpen: boolean;
@@ -14,9 +24,7 @@ interface SidebarProps {
   handleFileClick: (handle: any) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({
-  isSidebarOpen,
-  setIsSidebarOpen,
+const AppSidebar: React.FC<SidebarProps> = ({
   colorTheme,
   files,
   handleDirectoryChange,
@@ -25,13 +33,8 @@ const Sidebar: React.FC<SidebarProps> = ({
   handleFileClick
 }) => {
   return (
-    <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-      <SheetContent side="right" className={`sidebar w-[15rem] sm:w-[15rem] ${colorTheme} bg-background text-foreground`}>
-        <SheetHeader>
-          <SheetTitle>ファイル一覧</SheetTitle>
-        </SheetHeader>
-        <div className="py-4">
-          <div className="flex space-x-2">
+    <Sidebar collapsible="none" className={`${colorTheme}`}>
+      <SidebarHeader>          <div className="flex space-x-2">
             <Button variant="outline" size="icon" onClick={handleDirectoryChange}>
               <FolderOpen className="h-4 w-4" />
             </Button>
@@ -47,19 +50,23 @@ const Sidebar: React.FC<SidebarProps> = ({
               </Button>
             </a>
           </div>
-          <div className="py-4">
-            <ul className="space-y-2">
-              {files.map((file, index) => (
-                <li key={index} onClick={() => handleFileClick(file.handle)}>
-                  {file.name}
-                </li>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarMenu>
+            
+          {files.map((file, index) => (
+                          <SidebarMenuItem key={index}><SidebarMenuButton asChild>
+                          <a className="font-medium" onClick={() => handleFileClick(file.handle)}>
+                          {file.name}
+                          </a>
+                        </SidebarMenuButton></SidebarMenuItem>
               ))}
-            </ul>
-          </div>
-        </div>
-      </SheetContent>
-    </Sheet>
-  );
-};
-
-export default Sidebar;
+          </SidebarMenu>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarRail />
+    </Sidebar>
+  )
+}
+export default AppSidebar;
