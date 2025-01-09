@@ -1,15 +1,15 @@
 'use client'
 import { get, set } from 'idb-keyval';
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { Button } from "@/components/ui/button"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import { Settings, Logs, FolderOpen, CircleArrowRight, FileJson, History } from 'lucide-react'
+import { Settings, Logs} from 'lucide-react'
 import Header from "./header.tsx"
 import SettingsDialog from "./SettingsDialog.tsx"
+import Sidebar from "./Sidebar.tsx"
 
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false)
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16)
   const [fontFamily, setFontFamily] = useState('sans')
   const [colorTheme, setColorTheme] = useState('theme-gray');
@@ -20,7 +20,7 @@ export default function TextViewer() {
   const [currentFileName, setCurrentFileName] = useState("");
   const [encoding, setEncoding] = useState("UTF-8"); // 文字コードの状態を追加
   const [parser, setParser] = useState("なろう"); // パーサーの選択状態を追加
-  
+  const mainRef = useRef<HTMLDivElement>(null);
   const verifyPermission = async (fileHandle: FileSystemDirectoryHandle) => {
     // Check if permission was already granted. If so, return true.
     if ((await fileHandle.queryPermission()) === 'granted') {
@@ -107,6 +107,9 @@ export default function TextViewer() {
     } else {
       alert("現在のファイル名が連番形式ではありません");
     }
+    if (mainRef.current) {
+      mainRef.current.scrollTop = 0; // スクロールを上に戻す
+    }
   };
 
   const parseNarouSyntax = (inputText: string) => {
@@ -189,13 +192,14 @@ export default function TextViewer() {
           </Button>
       </Header>
 
-      <main className={`flex-1 overflow-auto p-4`}>
+      <main ref={mainRef} className={`flex-1 overflow-auto p-4`}>
         <div
           className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `} 
           style={{ fontSize: `${fontSize}px` }}
           dangerouslySetInnerHTML={{ __html: parseText(text) }}
         >
         </div>
+        <div className="text-center text-sm text-gray-500"><button onClick={handleNextFileClick}>次のファイル</button></div>
       </main>
 
       <SettingsDialog
@@ -213,40 +217,16 @@ export default function TextViewer() {
         setParser={setParser}
       />
 
-      <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
-        <SheetContent side="right" className={`sidebar w-[15rem] sm:w-[15rem] ${colorTheme} bg-background text-foreground`}>
-          <SheetHeader>
-            <SheetTitle>ファイル一覧</SheetTitle>
-          </SheetHeader>
-          <div className="py-4">
-          <div className="flex space-x-2">
-            <Button variant="outline" size="icon" onClick={handleDirectoryChange}>
-            <FolderOpen className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={handleDirectoryFromStore}>
-            <History  className="h-4 w-4" />
-            </Button>
-            <Button  variant="outline" size="icon" onClick={handleNextFileClick}>
-            <CircleArrowRight className="h-4 w-4" />
-            </Button>
-            <a href="https://github.com/445MMJ/LocalTextViewer">
-            <Button variant="outline" size="icon">
-            <FileJson   className="h-4 w-4" />
-            </Button></a>
-          </div>
-          <div className="py-4">
-
-          <ul className="space-y-2">
-            {files.map((file, index) => (
-              <li key={index} onClick={() => handleFileClick(file.handle)}>
-                {file.name}
-              </li>
-            ))}
-          </ul>
-          </div>
-          </div>
-        </SheetContent>
-      </Sheet>
+      <Sidebar
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        colorTheme={colorTheme}
+        files={files}
+        handleDirectoryChange={handleDirectoryChange}
+        handleDirectoryFromStore={handleDirectoryFromStore}
+        handleNextFileClick={handleNextFileClick}
+        handleFileClick={handleFileClick}
+      />
     </div>
   )
 }
