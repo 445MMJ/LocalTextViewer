@@ -2,18 +2,10 @@
 import { get, set } from 'idb-keyval';
 import { useState } from 'react'
 import { Button } from "@/components/ui/button"
-import { Slider } from "@/components/ui/slider"
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet"
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { FileText, Settings, Logs, FolderOpen, CircleArrowRight, FileJson, History } from 'lucide-react'
+import { Settings, Logs, FolderOpen, CircleArrowRight, FileJson, History } from 'lucide-react'
+import Header from "./header.tsx"
+import SettingsDialog from "./SettingsDialog.tsx"
 
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false)
@@ -184,16 +176,9 @@ export default function TextViewer() {
     }
   };
   
-  const handleColorThemeChange = (theme: string) => {
-    setColorTheme(theme);
-  };
-
   return (
     <div className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}>
-      <header className="flex items-center  justify-end p-4 bg-background border-b">
-        <div className="flex items-center space-x-2">
-          <FileText className="h-5 w-5" />
-          <h1 className="text-lg font-semibold"></h1>{currentFileName}
+      <Header>
           <Button variant="outline" size="icon" onClick={() => setOverlayOpen(true)}>
             <Settings className="h-4 w-4" />
             <span className="sr-only">設定</span>
@@ -202,8 +187,7 @@ export default function TextViewer() {
             <Logs className="h-4 w-4" />
             <span className="sr-only">ファイル一覧</span>
           </Button>
-        </div>
-      </header>
+      </Header>
 
       <main className={`flex-1 overflow-auto p-4`}>
         <div
@@ -214,93 +198,20 @@ export default function TextViewer() {
         </div>
       </main>
 
-      <Dialog open={isOverlayOpen} onOpenChange={setOverlayOpen}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>設定</DialogTitle>
-            <DialogDescription>フォントサイズやカラーテーマを設定します。</DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4">
-            <div>
-              <label htmlFor="font-size" className="block text-sm font-medium mb-1">
-                フォントサイズ: {fontSize}px
-              </label>
-              <Slider
-                id="font-size"
-                min={12}
-                max={24}
-                step={1}
-                value={[fontSize]}
-                onValueChange={(value) => setFontSize(value[0])}
-              />
-            </div>
-            <div>
-              <label htmlFor="font-family" className="block text-sm font-medium mb-1">
-                フォントファミリー
-              </label>
-              <Select value={fontFamily} onValueChange={setFontFamily}>
-                <SelectTrigger id="font-family">
-                  <SelectValue placeholder="フォントを選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sans">Sans-serif</SelectItem>
-                  <SelectItem value="serif">Serif</SelectItem>
-                  <SelectItem value="mono">Monospace</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label htmlFor="color-theme" className="block text-sm font-medium mb-1">
-                カラーテーマ
-              </label>
-              <Select value={colorTheme} onValueChange={handleColorThemeChange}>
-                <SelectTrigger id="color-theme">
-                  <SelectValue placeholder="テーマを選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="theme-white">白</SelectItem>
-                  <SelectItem value="theme-gray">グレー</SelectItem>
-                  <SelectItem value="theme-cream">生成り</SelectItem>
-                  <SelectItem value="theme-blue">水色</SelectItem>
-                  <SelectItem value="dark">くろ</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label htmlFor="parser" className="block text-sm font-medium mb-1">
-                パーサー
-              </label>
-              <Select value={parser} onValueChange={setParser}>
-                <SelectTrigger id="parser">
-                  <SelectValue placeholder="パーサーを選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="なろう">なろう</SelectItem>
-                  <SelectItem value="カクヨム">カクヨム</SelectItem>
-                  <SelectItem value="青空文庫">青空文庫</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label htmlFor="encoding" className="block text-sm font-medium mb-1">
-                エンコード
-              </label>
-              <Select value={encoding} onValueChange={setEncoding}>
-                <SelectTrigger id="encoding">
-                  <SelectValue placeholder="エンコードを選択" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="UTF-8">UTF-8</SelectItem>
-                  <SelectItem value="Shift-JIS">Shift-JIS</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-          <DialogClose asChild>
-            <Button className="mt-4">閉じる</Button>
-          </DialogClose>
-        </DialogContent>
-      </Dialog>
+      <SettingsDialog
+        isOpen={isOverlayOpen}
+        onOpenChange={setOverlayOpen}
+        fontSize={fontSize}
+        setFontSize={setFontSize}
+        fontFamily={fontFamily}
+        setFontFamily={setFontFamily}
+        colorTheme={colorTheme}
+        setColorTheme={setColorTheme}
+        encoding={encoding}
+        setEncoding={setEncoding}
+        parser={parser}
+        setParser={setParser}
+      />
 
       <Sheet open={isSidebarOpen} onOpenChange={setIsSidebarOpen}>
         <SheetContent side="right" className={`sidebar w-[15rem] sm:w-[15rem] ${colorTheme} bg-background text-foreground`}>
