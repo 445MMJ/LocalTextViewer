@@ -1,90 +1,67 @@
-import * as React from 'react';
+"use client"
 
+import * as React from "react"
+
+import { Button } from "@/components/ui/button"
 import {
   Sidebar,
   SidebarContent,
-  SidebarHeader,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarGroupLabel,
+  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarRail,
+  SidebarProvider,
 } from '@/components/ui/sidebar';
 
-// This is sample data.
-const data = {
-  items: [
-    {
-      title: 'Routing',
-      url: '#',
-    },
-    {
-      title: 'Data Fetching',
-      url: '#',
-      isActive: true,
-    },
-    {
-      title: 'Rendering',
-      url: '#',
-    },
-    {
-      title: 'Caching',
-      url: '#',
-    },
-    {
-      title: 'Styling',
-      url: '#',
-    },
-    {
-      title: 'Optimizing',
-      url: '#',
-    },
-    {
-      title: 'Configuring',
-      url: '#',
-    },
-    {
-      title: 'Testing',
-      url: '#',
-    },
-    {
-      title: 'Authentication',
-      url: '#',
-    },
-    {
-      title: 'Deploying',
-      url: '#',
-    },
-    {
-      title: 'Upgrading',
-      url: '#',
-    },
-    {
-      title: 'Examples',
-      url: '#',
-    },
-  ],
-};
+const projects = [
+  {
+    name: "Design Engineering",
+    url: "#",
+  },
+  {
+    name: "Sales & Marketing",
+    url: "#",
+  },
+  {
+    name: "Travel",
+    url: "#",
+  },
+  {
+    name: "Support",
+    url: "#",
+  },
+  {
+    name: "Feedback",
+    url: "#",
+  },
+]
 
-export default function AppSidebar({
-  ...props
-}: React.ComponentProps<typeof Sidebar>) {
+export default function AppSidebar() {
+
   return (
-    <Sidebar {...props}>
-      <SidebarHeader></SidebarHeader>
-      <SidebarContent className="gap-0">
+      <Sidebar>
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+            <SidebarGroupContent>
               <SidebarMenu>
-                {data.items.map((item) => (
-                  <SidebarMenuItem key={item.title}>
+                {projects.map((project) => (
+                  <SidebarMenuItem key={project.name}>
                     <SidebarMenuButton asChild>
-                      <a href={item.url}>
-                        <span>{item.title}</span>
+                      <a href={project.url}>
+                        <span>{project.name}</span>
                       </a>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
-      </SidebarContent>
-      <SidebarRail />
-    </Sidebar>
-  );
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+      </Sidebar>
+
+  )
 }

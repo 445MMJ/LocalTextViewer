@@ -188,15 +188,11 @@ export default function TextViewer() {
         return inputText;
     }
   };
-
+  const [open, setOpen] = useState(true)
   return (
-    <SidebarProvider>
-      <AppSidebar />
-      <SidebarInset>
         <div
           className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}
-        >
-          <SidebarTrigger className="-ml-1" />
+        ><SidebarProvider open={open} onOpenChange={setOpen}> <AppSidebar /><SidebarInset>
           <Header>
             <Button
               variant="outline"
@@ -206,16 +202,18 @@ export default function TextViewer() {
               <Settings className="h-4 w-4" />
               <span className="sr-only">設定</span>
             </Button>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setIsSidebarOpen(true)}
-            >
-              <Logs className="h-4 w-4" />
-              <span className="sr-only">ファイル一覧</span>
-            </Button>
-          </Header>
+                     <Button
+                       onClick={() => setOpen((open) => !open)}
+                       size="sm"
+                       variant="ghost"
+                     >
+                       <span>{open ? "Close" : "Open"} Sidebar</span>
+                     </Button>
+          </Header>    </SidebarInset>
+              </SidebarProvider>
 
+          <div className="main-screen__body">
+          
           <main ref={mainRef} className={`flex-1 overflow-auto p-4`}>
             <div
               className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `}
@@ -226,6 +224,7 @@ export default function TextViewer() {
               <button onClick={handleNextFileClick}>次のファイル</button>
             </div>
           </main>
+          </div>
 
           <SettingsDialog
             isOpen={isOverlayOpen}
@@ -241,8 +240,6 @@ export default function TextViewer() {
             parser={parser}
             setParser={setParser}
           />
-        </div>{' '}
-      </SidebarInset>
-    </SidebarProvider>
+        </div>
   );
 }
