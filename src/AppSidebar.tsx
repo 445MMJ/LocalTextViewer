@@ -1,72 +1,90 @@
-import React from 'react';
-import { Button } from '@/components/ui/button';
-import { FolderOpen, History, CircleArrowRight, FileJson } from 'lucide-react';
+import * as React from 'react';
 
 import {
   Sidebar,
   SidebarContent,
-  SidebarGroup,
   SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from '@/components/ui/sidebar';
 
-interface SidebarProps {
-  isSidebarOpen: boolean;
-  setIsSidebarOpen: (isOpen: boolean) => void;
-  colorTheme: string;
-  files: { name: string; handle: any }[];
-  handleDirectoryChange: () => void;
-  handleDirectoryFromStore: () => void;
-  handleNextFileClick: () => void;
-  handleFileClick: (handle: any) => void;
-}
+// This is sample data.
+const data = {
+  items: [
+    {
+      title: 'Routing',
+      url: '#',
+    },
+    {
+      title: 'Data Fetching',
+      url: '#',
+      isActive: true,
+    },
+    {
+      title: 'Rendering',
+      url: '#',
+    },
+    {
+      title: 'Caching',
+      url: '#',
+    },
+    {
+      title: 'Styling',
+      url: '#',
+    },
+    {
+      title: 'Optimizing',
+      url: '#',
+    },
+    {
+      title: 'Configuring',
+      url: '#',
+    },
+    {
+      title: 'Testing',
+      url: '#',
+    },
+    {
+      title: 'Authentication',
+      url: '#',
+    },
+    {
+      title: 'Deploying',
+      url: '#',
+    },
+    {
+      title: 'Upgrading',
+      url: '#',
+    },
+    {
+      title: 'Examples',
+      url: '#',
+    },
+  ],
+};
 
-const AppSidebar: React.FC<SidebarProps> = ({
-  colorTheme,
-  files,
-  handleDirectoryChange,
-  handleDirectoryFromStore,
-  handleNextFileClick,
-  handleFileClick
-}) => {
+export default function AppSidebar({
+  ...props
+}: React.ComponentProps<typeof Sidebar>) {
   return (
-    <Sidebar collapsible="none" className={`${colorTheme}`}>
-      <SidebarHeader>          <div className="flex space-x-2">
-            <Button variant="outline" size="icon" onClick={handleDirectoryChange}>
-              <FolderOpen className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={handleDirectoryFromStore}>
-              <History className="h-4 w-4" />
-            </Button>
-            <Button variant="outline" size="icon" onClick={handleNextFileClick}>
-              <CircleArrowRight className="h-4 w-4" />
-            </Button>
-            <a href="https://github.com/445MMJ/LocalTextViewer">
-              <Button variant="outline" size="icon">
-                <FileJson className="h-4 w-4" />
-              </Button>
-            </a>
-          </div>
-      </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup>
-          <SidebarMenu>
-            
-          {files.map((file, index) => (
-                          <SidebarMenuItem key={index}><SidebarMenuButton asChild>
-                          <a className="font-medium" onClick={() => handleFileClick(file.handle)}>
-                          {file.name}
-                          </a>
-                        </SidebarMenuButton></SidebarMenuItem>
-              ))}
-          </SidebarMenu>
-        </SidebarGroup>
+    <Sidebar {...props}>
+      <SidebarHeader></SidebarHeader>
+      <SidebarContent className="gap-0">
+              <SidebarMenu>
+                {data.items.map((item) => (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={item.url}>
+                        <span>{item.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
       </SidebarContent>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
-export default AppSidebar;
