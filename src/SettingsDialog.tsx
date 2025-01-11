@@ -105,7 +105,7 @@ export default function SettingsDialog({
                   <SelectItem value="theme-gray">グレー</SelectItem>
                   <SelectItem value="theme-cream">生成り</SelectItem>
                   <SelectItem value="theme-blue">水色</SelectItem>
-                  <SelectItem value="dark">くろ</SelectItem>
+                  <SelectItem value="theme-black">くろ</SelectItem>
                 </SelectContent>
               </Select>
             </div>
