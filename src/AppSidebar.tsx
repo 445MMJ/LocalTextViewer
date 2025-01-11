@@ -1,4 +1,4 @@
-"use client"
+'use client';
 
 import { ReactNode } from 'react';
 import {
@@ -12,52 +12,39 @@ import {
   SidebarFooter,
 } from '@/components/ui/sidebar';
 
-const projects = [
-  {
-    name: "Design Engineering",
-    url: "#",
-  },
-  {
-    name: "Sales & Marketing",
-    url: "#",
-  },
-  {
-    name: "Travel",
-    url: "#",
-  },
-  {
-    name: "Support",
-    url: "#",
-  },
-  {
-    name: "Feedback",
-    url: "#",
-  },
-]
+interface file {
+  name: string;
+  handle: FileSystemFileHandle;
+}
 
 interface HeaderProps {
   children: ReactNode;
+  files: file[];
+  handleFileClick: (fileHandle: FileSystemFileHandle) => Promise<void>;
 }
 
-export default function AppSidebar({ children }: HeaderProps) {
+export default function AppSidebar({ children, files, handleFileClick }: HeaderProps) {
   return (
-      <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
-        <SidebarHeader>{children}</SidebarHeader>
-        <SidebarContent>
-            <SidebarGroupLabel></SidebarGroupLabel>
-              <SidebarMenu>
-                {projects.map((project) => (
-                  <SidebarMenuItem key={project.name}>
-                    <SidebarMenuButton asChild>
-                      <a href={project.url}>
-                        <span>{project.name}</span>
-                      </a>
-                    </SidebarMenuButton>
-                  </SidebarMenuItem>
-                ))}
-              </SidebarMenu>
-        </SidebarContent>
-        <SidebarFooter>ふったーだよ</SidebarFooter>
-      </Sidebar>
-  )
+    <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
+      <SidebarHeader>{children}</SidebarHeader>
+      <SidebarContent>
+        <SidebarMenu>
+          {files.map((file) => (
+            <SidebarMenuItem key={file.name}>
+              <SidebarMenuButton asChild onClick={() => handleFileClick(file.handle)}>
+                <a href="#">
+                  <span>{file.name}</span>
+                </a>
+              </SidebarMenuButton>
+            </SidebarMenuItem>
+          ))}
+        </SidebarMenu>
+      </SidebarContent>
+      <SidebarFooter>
+        <a href="https://github.com/445MMJ/LocalTextViewer">
+          <span>GitHub</span>
+        </a>
+      </SidebarFooter>
+    </Sidebar>
+  );
 }

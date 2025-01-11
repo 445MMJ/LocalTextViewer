@@ -2,7 +2,7 @@
 import { get, set } from 'idb-keyval';
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Settings } from 'lucide-react';
+import { Settings, TableOfContents, SquareX, FolderOpen, History, CircleArrowRight } from 'lucide-react';
 import Header from './header.tsx';
 import SettingsDialog from './SettingsDialog.tsx';
 import AppSidebar from './AppSidebar.tsx';
@@ -11,12 +11,13 @@ export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [fontFamily, setFontFamily] = useState('sans');
-  const [colorTheme, setColorTheme] = useState('theme-gray');
+  const [colorTheme, setColorTheme] = useState('theme-blue');
   const [text, setText] = useState('');
   const [files, setFiles] = useState<
     { name: string; handle: FileSystemFileHandle }[]
   >([]);
   const [currentFileName, setCurrentFileName] = useState('');
+  const [currentDirectoryName, setCurrentDirectoryName] = useState('');
   const [encoding, setEncoding] = useState('UTF-8'); // 文字コードの状態を追加
   const [parser, setParser] = useState('なろう'); // パーサーの選択状態を追加
   const mainRef = useRef<HTMLDivElement>(null);
@@ -37,15 +38,13 @@ export default function TextViewer() {
     try {
       const directoryHandleOrUndefined = await get('directory');
       if (directoryHandleOrUndefined) {
-        console.log(
+        console.info(
           `Retrieved directroy handle "${directoryHandleOrUndefined.name}" from IndexedDB.`
         );
         await verifyPermission(directoryHandleOrUndefined);
+        setCurrentDirectoryName(directoryHandleOrUndefined.name);
         const fileList: { name: string; handle: FileSystemFileHandle }[] = [];
         for await (const [name, handle] of directoryHandleOrUndefined) {
-          console.log(
-            `Stored directory handle "${directoryHandleOrUndefined.name}" from IndexedDB.`
-          );
           if (handle.kind === 'file') {
             fileList.push({ name, handle });
           }
@@ -62,12 +61,11 @@ export default function TextViewer() {
   const handleDirectoryChange = async () => {
     try {
       const directoryHandle = await window.showDirectoryPicker();
+      setCurrentDirectoryName(directoryHandle.name);
+      console.info(`Store directory handle "${directoryHandle.name}" in IndexedDB`);
       await set('directory', directoryHandle);
       const fileList: { name: string; handle: FileSystemFileHandle }[] = [];
       for await (const [name, handle] of directoryHandle) {
-        console.log(
-          `Stored directory handle "${directoryHandle.name}" from IndexedDB.`
-        );
         if (handle.kind === 'file') {
           fileList.push({ name, handle });
         }
@@ -82,6 +80,7 @@ export default function TextViewer() {
     try {
       const file = await fileHandle.getFile();
       await set('file', fileHandle);
+      console.info(`Open file handle "${fileHandle.name}"`);
       const reader = new FileReader();
       reader.onload = (e) => {
         const fileContent = e.target?.result as string;
@@ -89,6 +88,9 @@ export default function TextViewer() {
         setCurrentFileName(file.name); // 現在のファイル名を設定
       };
       reader.readAsText(file, encoding); // 文字コードを変数として渡す
+      if (mainRef.current) {
+        mainRef.current.scrollTop = 0; // スクロールを上に戻す
+      }
     } catch (error) {
       console.error('Error reading file:', error);
     }
@@ -185,68 +187,87 @@ export default function TextViewer() {
   };
   const [open, setOpen] = useState(true);
   return (
-    <div className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}>
+    <div
+      className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}
+    >
       <SidebarProvider open={open} onOpenChange={setOpen}>
-      <SidebarInset>
-      <Header>
-        <Button
-          variant="outline"
-          size="icon"
-          onClick={() => setOverlayOpen(true)}
-        >
-          <Settings className="h-4 w-4" />
-          <span className="sr-only">設定</span>
-        </Button>
-        <Button
-          onClick={() => setOpen((open) => !open)}
-          size="sm"
-          variant="ghost"
-        >
-          <span>{open ? 'Close' : 'Open'} Sidebar</span>
-        </Button>
-      </Header>
+        <SidebarInset>
+          <Header>
+            <p>{currentDirectoryName}</p>
+            <p>{currentFileName}</p>
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setOverlayOpen(true)}
+            >
+              <Settings className="h-4 w-4" />
+              <span className="sr-only">設定</span>
+            </Button>
+            <Button
+              onClick={() => setOpen((open) => !open)}
+              size="icon"
+              variant="outline"
+            >
+              {open ? <SquareX/> : <TableOfContents />}
+              <span className="sr-only">目次</span>
+            </Button>
+          </Header>
 
-      <main ref={mainRef} className={`flex-1 overflow-auto p-4`}>
-        <div
-          className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `}
-          style={{ fontSize: `${fontSize}px` }}
-          dangerouslySetInnerHTML={{ __html: parseText(text) }}
-        >
-        </div>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <p>aaaaaa</p>
-        <div className="text-center text-sm text-gray-500">
-          <button onClick={handleNextFileClick}>次のファイル</button>
-        </div>
-      </main>
+          <main ref={mainRef} className={`flex-1 overflow-auto p-4`}>
+            <div
+              className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `}
+              style={{ fontSize: `${fontSize}px` }}
+              dangerouslySetInnerHTML={{ __html: parseText(text) }}
+            ></div>
+            <div className="text-center text-sm text-gray-500">
+              <button onClick={handleNextFileClick}>次のファイル</button>
+            </div>
+          </main>
 
-
-      <SettingsDialog
-        isOpen={isOverlayOpen}
-        onOpenChange={setOverlayOpen}
-        fontSize={fontSize}
-        setFontSize={setFontSize}
-        fontFamily={fontFamily}
-        setFontFamily={setFontFamily}
-        colorTheme={colorTheme}
-        setColorTheme={setColorTheme}
-        encoding={encoding} 
-        setEncoding={setEncoding}
-        parser={parser}
-        setParser={setParser}
-      />
-
-      
-       
-
+          <SettingsDialog
+            isOpen={isOverlayOpen}
+            onOpenChange={setOverlayOpen}
+            fontSize={fontSize}
+            setFontSize={setFontSize}
+            fontFamily={fontFamily}
+            setFontFamily={setFontFamily}
+            colorTheme={colorTheme}
+            setColorTheme={setColorTheme}
+            encoding={encoding}
+            setEncoding={setEncoding}
+            parser={parser}
+            setParser={setParser}
+          />
         </SidebarInset>
-        <AppSidebar />
+        <AppSidebar
+          children={
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleDirectoryChange}
+              >
+                <FolderOpen className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleDirectoryFromStore}
+              >
+                <History className="h-4 w-4" />
+              </Button>
+              <Button
+                variant="outline"
+                size="icon"
+                onClick={handleNextFileClick}
+              >
+                <CircleArrowRight className="h-4 w-4" />
+              </Button>
+            </div>
+          }
+          files={files}
+          handleFileClick={handleFileClick}
+        ></AppSidebar>
       </SidebarProvider>
     </div>
   );
