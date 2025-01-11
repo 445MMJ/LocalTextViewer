@@ -2,11 +2,19 @@
 import { get, set } from 'idb-keyval';
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Settings, TableOfContents, SquareX, FolderOpen, History, CircleArrowRight } from 'lucide-react';
+import {
+  Settings,
+  TableOfContents,
+  SquareX,
+  FolderOpen,
+  History,
+  CircleArrowRight,
+} from 'lucide-react';
 import Header from './header.tsx';
 import SettingsDialog from './SettingsDialog.tsx';
 import AppSidebar from './AppSidebar.tsx';
 import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
+import { Separator } from '@/components/ui/separator';
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
@@ -62,7 +70,9 @@ export default function TextViewer() {
     try {
       const directoryHandle = await window.showDirectoryPicker();
       setCurrentDirectoryName(directoryHandle.name);
-      console.info(`Store directory handle "${directoryHandle.name}" in IndexedDB`);
+      console.info(
+        `Store directory handle "${directoryHandle.name}" in IndexedDB`
+      );
       await set('directory', directoryHandle);
       const fileList: { name: string; handle: FileSystemFileHandle }[] = [];
       for await (const [name, handle] of directoryHandle) {
@@ -193,14 +203,16 @@ export default function TextViewer() {
       <SidebarProvider open={open} onOpenChange={setOpen}>
         <SidebarInset>
           <Header>
+            <Separator orientation="vertical" className="h-4" />
             <p>{currentDirectoryName}</p>
+            <Separator orientation="vertical" className="h-4" />
             <p>{currentFileName}</p>
             <Button
               variant="outline"
               size="icon"
               onClick={() => setOverlayOpen(true)}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="h-4" />
               <span className="sr-only">設定</span>
             </Button>
             <Button
@@ -208,7 +220,7 @@ export default function TextViewer() {
               size="icon"
               variant="outline"
             >
-              {open ? <SquareX/> : <TableOfContents />}
+              {open ? <SquareX /> : <TableOfContents />}
               <span className="sr-only">目次</span>
             </Button>
           </Header>
