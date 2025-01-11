@@ -1,7 +1,6 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { FolderOpen, History, CircleArrowRight, FileJson } from 'lucide-react';
-import { useSidebar } from "@/components/ui/sidebar"
 import {
   Sidebar,
   SidebarContent,

@@ -1,19 +1,15 @@
 "use client"
 
-import * as React from "react"
-
-import { Button } from "@/components/ui/button"
+import { ReactNode } from 'react';
 import {
   Sidebar,
+  SidebarHeader,
   SidebarContent,
-  SidebarGroup,
-  SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarInset,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarProvider,
+  SidebarFooter,
 } from '@/components/ui/sidebar';
 
 const projects = [
@@ -39,14 +35,16 @@ const projects = [
   },
 ]
 
-export default function AppSidebar() {
+interface HeaderProps {
+  children: ReactNode;
+}
 
+export default function AppSidebar({ children }: HeaderProps) {
   return (
-      <Sidebar>
+      <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
+        <SidebarHeader>{children}</SidebarHeader>
         <SidebarContent>
-          <SidebarGroup>
-            <SidebarGroupLabel>Projects</SidebarGroupLabel>
-            <SidebarGroupContent>
+            <SidebarGroupLabel></SidebarGroupLabel>
               <SidebarMenu>
                 {projects.map((project) => (
                   <SidebarMenuItem key={project.name}>
@@ -58,10 +56,8 @@ export default function AppSidebar() {
                   </SidebarMenuItem>
                 ))}
               </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
         </SidebarContent>
+        <SidebarFooter>ふったーだよ</SidebarFooter>
       </Sidebar>
-
   )
 }

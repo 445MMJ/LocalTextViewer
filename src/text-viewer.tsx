@@ -2,18 +2,13 @@
 import { get, set } from 'idb-keyval';
 import { useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
-import { Settings, Logs } from 'lucide-react';
+import { Settings } from 'lucide-react';
 import Header from './header.tsx';
 import SettingsDialog from './SettingsDialog.tsx';
 import AppSidebar from './AppSidebar.tsx';
-import {
-  SidebarInset,
-  SidebarProvider,
-  SidebarTrigger,
-} from '@/components/ui/sidebar';
+import { SidebarInset, SidebarProvider } from '@/components/ui/sidebar';
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
   const [fontFamily, setFontFamily] = useState('sans');
   const [colorTheme, setColorTheme] = useState('theme-gray');
@@ -188,58 +183,71 @@ export default function TextViewer() {
         return inputText;
     }
   };
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(true);
   return (
+    <div className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}>
+      <SidebarProvider open={open} onOpenChange={setOpen}>
+      <SidebarInset>
+      <Header>
+        <Button
+          variant="outline"
+          size="icon"
+          onClick={() => setOverlayOpen(true)}
+        >
+          <Settings className="h-4 w-4" />
+          <span className="sr-only">設定</span>
+        </Button>
+        <Button
+          onClick={() => setOpen((open) => !open)}
+          size="sm"
+          variant="ghost"
+        >
+          <span>{open ? 'Close' : 'Open'} Sidebar</span>
+        </Button>
+      </Header>
+
+      <main ref={mainRef} className={`flex-1 overflow-auto p-4`}>
         <div
-          className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}
-        ><SidebarProvider open={open} onOpenChange={setOpen}> <AppSidebar /><SidebarInset>
-          <Header>
-            <Button
-              variant="outline"
-              size="icon"
-              onClick={() => setOverlayOpen(true)}
-            >
-              <Settings className="h-4 w-4" />
-              <span className="sr-only">設定</span>
-            </Button>
-                     <Button
-                       onClick={() => setOpen((open) => !open)}
-                       size="sm"
-                       variant="ghost"
-                     >
-                       <span>{open ? "Close" : "Open"} Sidebar</span>
-                     </Button>
-          </Header>    </SidebarInset>
-              </SidebarProvider>
-
-          <div className="main-screen__body">
-          
-          <main ref={mainRef} className={`flex-1 overflow-auto p-4`}>
-            <div
-              className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `}
-              style={{ fontSize: `${fontSize}px` }}
-              dangerouslySetInnerHTML={{ __html: parseText(text) }}
-            ></div>
-            <div className="text-center text-sm text-gray-500">
-              <button onClick={handleNextFileClick}>次のファイル</button>
-            </div>
-          </main>
-          </div>
-
-          <SettingsDialog
-            isOpen={isOverlayOpen}
-            onOpenChange={setOverlayOpen}
-            fontSize={fontSize}
-            setFontSize={setFontSize}
-            fontFamily={fontFamily}
-            setFontFamily={setFontFamily}
-            colorTheme={colorTheme}
-            setColorTheme={setColorTheme}
-            encoding={encoding}
-            setEncoding={setEncoding}
-            parser={parser}
-            setParser={setParser}
-          />
+          className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `}
+          style={{ fontSize: `${fontSize}px` }}
+          dangerouslySetInnerHTML={{ __html: parseText(text) }}
+        >
         </div>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <p>aaaaaa</p>
+        <div className="text-center text-sm text-gray-500">
+          <button onClick={handleNextFileClick}>次のファイル</button>
+        </div>
+      </main>
+
+
+      <SettingsDialog
+        isOpen={isOverlayOpen}
+        onOpenChange={setOverlayOpen}
+        fontSize={fontSize}
+        setFontSize={setFontSize}
+        fontFamily={fontFamily}
+        setFontFamily={setFontFamily}
+        colorTheme={colorTheme}
+        setColorTheme={setColorTheme}
+        encoding={encoding} 
+        setEncoding={setEncoding}
+        parser={parser}
+        setParser={setParser}
+      />
+
+      
+       
+
+        </SidebarInset>
+        <AppSidebar />
+      </SidebarProvider>
+    </div>
   );
 }
