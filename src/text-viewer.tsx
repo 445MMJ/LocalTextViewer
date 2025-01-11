@@ -24,8 +24,8 @@ export default function TextViewer() {
   const [files, setFiles] = useState<
     { name: string; handle: FileSystemFileHandle }[]
   >([]);
-  const [currentFileName, setCurrentFileName] = useState('');
-  const [currentDirectoryName, setCurrentDirectoryName] = useState('');
+  const [currentFileName, setCurrentFileName] = useState('dir');
+  const [currentDirectoryName, setCurrentDirectoryName] = useState('file');
   const [encoding, setEncoding] = useState('UTF-8'); // 文字コードの状態を追加
   const [parser, setParser] = useState('なろう'); // パーサーの選択状態を追加
   const mainRef = useRef<HTMLDivElement>(null);
@@ -230,10 +230,17 @@ export default function TextViewer() {
               className={`max-w-3xl mx-auto text-viewer-content font-${fontFamily} `}
               style={{ fontSize: `${fontSize}px` }}
               dangerouslySetInnerHTML={{ __html: parseText(text) }}
-            ></div>
-            <div className="text-center text-sm text-gray-500">
-              <button onClick={handleNextFileClick}>次のファイル</button>
+            >
             </div>
+            <div className="max-w-3xl mx-auto text-center">
+            <Button
+              onClick={handleNextFileClick}
+              variant="secondary"
+              className='w-full h-10 rounded-md px-8'
+            >
+              <span >次のファイル</span>
+            </Button>
+              </div>
           </main>
 
           <SettingsDialog
