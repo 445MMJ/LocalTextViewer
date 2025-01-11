@@ -203,9 +203,9 @@ export default function TextViewer() {
       <SidebarProvider open={open} onOpenChange={setOpen}>
         <SidebarInset>
           <Header>
-            <Separator orientation="vertical" className="h-4" />
+            <Separator orientation="vertical" className="h-5 w-[1px]" />
             <p>{currentDirectoryName}</p>
-            <Separator orientation="vertical" className="h-4" />
+            <Separator orientation="vertical" className="h-5 w-[1px]" />
             <p>{currentFileName}</p>
             <Button
               variant="outline"
