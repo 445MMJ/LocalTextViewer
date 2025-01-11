@@ -46,8 +46,7 @@ export default function SettingsDialog({
 }: SettingsDialogProps) {
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
-      <div className="${colorTheme}">
-        <DialogContent>
+        <DialogContent  className={`${colorTheme} bg-background text-foreground`}>
           <DialogHeader>
             <DialogTitle>設定</DialogTitle>
             <DialogDescription>
@@ -58,7 +57,7 @@ export default function SettingsDialog({
             <div>
               <label
                 htmlFor="font-size"
-                className="block text-sm font-medium mb-1"
+                className="text-sm font-medium mb-1"
               >
                 フォントサイズ: {fontSize}px
               </label>
@@ -74,7 +73,7 @@ export default function SettingsDialog({
             <div>
               <label
                 htmlFor="font-family"
-                className="block text-sm font-medium mb-1"
+                className="text-sm font-medium mb-1"
               >
                 フォントファミリー
               </label>
@@ -92,7 +91,7 @@ export default function SettingsDialog({
             <div>
               <label
                 htmlFor="color-theme"
-                className="block text-sm font-medium mb-1"
+                className="text-sm font-medium mb-1"
               >
                 カラーテーマ
               </label>
@@ -112,7 +111,7 @@ export default function SettingsDialog({
             <div>
               <label
                 htmlFor="parser"
-                className="block text-sm font-medium mb-1"
+                className="text-sm font-medium mb-1"
               >
                 パーサー
               </label>
@@ -130,7 +129,7 @@ export default function SettingsDialog({
             <div>
               <label
                 htmlFor="encoding"
-                className="block text-sm font-medium mb-1"
+                className="text-sm font-medium mb-1"
               >
                 エンコード
               </label>
@@ -149,7 +148,6 @@ export default function SettingsDialog({
             <Button className="mt-4">閉じる</Button>
           </DialogClose>
         </DialogContent>
-      </div>
     </Dialog>
   );
 }
