@@ -175,7 +175,7 @@ const Sidebar = React.forwardRef<
     },
     ref
   ) => {
-    const { isMobile, state, openMobile, setOpenMobile } = useSidebar()
+    const { isMobile, state, open, setOpen } = useSidebar()
 
     if (collapsible === "none") {
       return (
@@ -194,7 +194,7 @@ const Sidebar = React.forwardRef<
 
     if (isMobile) {
       return (
-        <Sheet open={openMobile} onOpenChange={setOpenMobile} {...props}>
+        <Sheet open={open} onOpenChange={setOpen} {...props}>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
