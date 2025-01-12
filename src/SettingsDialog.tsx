@@ -82,8 +82,8 @@ export default function SettingsDialog({
                   <SelectValue placeholder="フォントを選択" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="sans">Sans-serif</SelectItem>
-                  <SelectItem value="serif">Serif</SelectItem>
+                  <SelectItem value="localSans">明朝</SelectItem>
+                  <SelectItem value="localSerif">ゴシック</SelectItem>
                   <SelectItem value="mono">Monospace</SelectItem>
                 </SelectContent>
               </Select>

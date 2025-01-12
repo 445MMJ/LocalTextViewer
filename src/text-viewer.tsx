@@ -18,7 +18,7 @@ import { Separator } from '@/components/ui/separator';
 export default function TextViewer() {
   const [isOverlayOpen, setOverlayOpen] = useState(false);
   const [fontSize, setFontSize] = useState(16);
-  const [fontFamily, setFontFamily] = useState('sans');
+  const [fontFamily, setFontFamily] = useState('localSans');
   const [colorTheme, setColorTheme] = useState('theme-blue');
   const [text, setText] = useState('');
   const [files, setFiles] = useState<

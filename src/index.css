@@ -2,8 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-  font-family: Arial, Helvetica, sans-serif;
+.font-localSans {
+  font-family: "Hiragino Mincho Pro","Yu Mincho",'"sans-serif"'
+}
+.font-localSerif {
+  font-family: "Hiragino Kaku Gothic ProN","Hiragino Sans","Meiryo","serif"
 }
 
 @layer utilities {
@@ -180,7 +183,6 @@ body {
     --sidebar-primary-foreground: var(--primary-foreground);
     --sidebar-accent-foreground : var(--accent-foreground);
   }
-  
 }
 
 @layer base {
