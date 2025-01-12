@@ -236,7 +236,7 @@ export default function TextViewer() {
             <Button
               onClick={handleNextFileClick}
               variant="secondary"
-              className='w-full h-10 rounded-md px-8'
+              className='w-full h-16 rounded-md px-8'
             >
               <span >次のファイル</span>
             </Button>
