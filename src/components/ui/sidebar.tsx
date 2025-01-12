@@ -10,7 +10,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Separator } from "@/components/ui/separator"
-import { Sheet, SheetContent } from "@/components/ui/sheet"
+import { Sheet, SheetTitle, SheetContent } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
   Tooltip,
@@ -162,6 +162,7 @@ const Sidebar = React.forwardRef<
     side?: "left" | "right"
     variant?: "sidebar" | "floating" | "inset"
     collapsible?: "offcanvas" | "icon" | "none"
+    colorTheme?: string
   }
 >(
   (
@@ -171,6 +172,7 @@ const Sidebar = React.forwardRef<
       collapsible = "offcanvas",
       className,
       children,
+      colorTheme,
       ...props
     },
     ref
@@ -195,10 +197,11 @@ const Sidebar = React.forwardRef<
     if (isMobile) {
       return (
         <Sheet open={open} onOpenChange={setOpen} {...props}>
+          <SheetTitle className="hidden"></SheetTitle>
           <SheetContent
             data-sidebar="sidebar"
             data-mobile="true"
-            className="w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden"
+            className={`w-[--sidebar-width] bg-sidebar p-0 text-sidebar-foreground [&>button]:hidden ${colorTheme}`}
             style={
               {
                 "--sidebar-width": SIDEBAR_WIDTH_MOBILE,

@@ -195,7 +195,7 @@ export default function TextViewer() {
         return inputText;
     }
   };
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   return (
     <div
       className={`flex flex-col h-screen ${colorTheme} bg-background text-foreground`}
@@ -286,6 +286,7 @@ export default function TextViewer() {
           }
           files={files}
           handleFileClick={handleFileClick}
+          colorTheme={colorTheme}
         ></AppSidebar>
       </SidebarProvider>
     </div>

@@ -20,11 +20,12 @@ interface HeaderProps {
   children: ReactNode;
   files: file[];
   handleFileClick: (fileHandle: FileSystemFileHandle) => Promise<void>;
+  colorTheme: string;
 }
 
-export default function AppSidebar({ children, files, handleFileClick }: HeaderProps) {
+export default function AppSidebar({ children, files, handleFileClick, colorTheme }: HeaderProps) {
   return (
-    <Sidebar side="right" variant="sidebar" collapsible="offcanvas">
+    <Sidebar side="right" variant="sidebar" collapsible="offcanvas" colorTheme={colorTheme}>
       <SidebarHeader>{children}</SidebarHeader>
       <SidebarContent>
         <SidebarMenu>
